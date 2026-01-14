@@ -1,0 +1,16 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" fill="none">
+  <!-- Abstract Brain Icon -->
+  <g transform="translate(10, 10) scale(1.2)">
+    <path d="M25 10C21 10 17 12 15 15C13 12 9 10 5 10C2.2 10 0 12.2 0 15V35C0 37.8 2.2 40 5 40C9 40 13 38 15 35C17 38 21 40 25 40C27.8 40 30 37.8 30 35V15C30 12.2 27.8 10 25 10ZM25 35C22 35 19 33 17 30V20C19 22 22 24 25 24V35ZM5 35V24C8 24 11 22 13 20V30C11 33 8 35 5 35Z" fill="#111827"/>
+  </g>
+  
+  <!-- Main Text -->
+  <text x="60" y="45" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="32" fill="#111827" letter-spacing="1">BRAIN STUDIO</text>
+  
+  <!-- Subtitle -->
+  <text x="62" y="65" font-family="Arial, Helvetica, sans-serif" font-weight="normal" font-size="12" fill="#6B7280" letter-spacing="3" text-transform="uppercase">Agencia Creativa</text>
+  
+  <!-- Accent Dot -->
+  <circle cx="290" cy="45" r="4" fill="#7C3AED"/>
+</svg>
