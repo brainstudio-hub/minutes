@@ -124,8 +124,14 @@ const GeneralSummary = ({ files, content, sourceTitle }) => {
           
           <div className="text-left text-sm text-gray-300 space-y-2">
             <p><strong className="text-purple-400">Temas:</strong> {summaryData.meeting_topics?.join(", ")}</p>
-            {summaryData.agreed_dates?.length > 0 && (
-                 <p><strong className="text-purple-400">Próximas Fechas:</strong> {summaryData.agreed_dates.length} identificadas</p>
+            {summaryData.participants?.length > 0 && (
+                 <p><strong className="text-purple-400">Participantes:</strong> {summaryData.participants.length}</p>
+            )}
+            {summaryData.meeting_duration && (
+                 <p><strong className="text-purple-400">Duración:</strong> {summaryData.meeting_duration}</p>
+            )}
+            {summaryData.agreements?.length > 0 && (
+                 <p><strong className="text-purple-400">Acuerdos:</strong> {summaryData.agreements.length} identificados</p>
             )}
           </div>
         </div>

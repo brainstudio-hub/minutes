@@ -1,10 +1,8 @@
 
 import axios from 'axios';
 
-// Note: In a production environment, API keys should be handled securely via backend proxy.
-// Since this is a frontend-only prototype, we are using the provided key directly.
-const OPENAI_API_KEY = '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';
-const WHISPER_API_URL = 'https://api.openai.com/v1/audio/transcriptions';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://minutes-production.up.railway.app';
+const WHISPER_API_URL = `${API_BASE_URL}/api/openai/v1/audio/transcriptions`;
 
 export const processAudio = async (file) => {
   if (!file) {
@@ -27,7 +25,6 @@ export const processAudio = async (file) => {
   try {
     const response = await axios.post(WHISPER_API_URL, formData, {
       headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'multipart/form-data',
       },
     });
