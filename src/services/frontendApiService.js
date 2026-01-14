@@ -21,7 +21,7 @@ const frontendApiService = {
     while (attempt < retries) {
       try {
         const response = await axios.post(OPENAI_API_URL, {
-          model: "gpt-5.1",
+          model: "gpt-5.2-pro",
           messages: [
             { role: "system", content: finalSystemMessage },
             { role: "user", content: prompt }
