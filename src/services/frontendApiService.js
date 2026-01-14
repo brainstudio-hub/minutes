@@ -1,11 +1,8 @@
 import axios from 'axios';
 
-// API Keys
-const OPENAI_API_KEY = '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';
-const FIREFLIES_API_KEY = 'f42ce5bc-ad1a-4d10-973f-3df2c75327e6';
-
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-const FIREFLIES_API_URL = 'https://api.fireflies.ai/graphql';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://delightful-nourishment-production.up.railway.app';
+const OPENAI_API_URL = `${API_BASE_URL}/api/openai/v1/chat/completions`;
+const FIREFLIES_API_URL = `${API_BASE_URL}/api/fireflies/graphql`;
 
 // Helper for delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -22,24 +19,15 @@ const frontendApiService = {
 
     while (attempt < retries) {
       try {
-        const response = await axios.post(
-          OPENAI_API_URL,
-          {
-            model: "gpt-5.1",
-            messages: [
-              { role: "system", content: finalSystemMessage },
-              { role: "user", content: prompt }
-            ],
-            response_format: { type: "json_object" }, // Enforce JSON mode
-            temperature: 0.7
-          },
-          {
-            headers: {
-              'Authorization': `Bearer ${OPENAI_API_KEY}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
+        const response = await axios.post(OPENAI_API_URL, {
+          model: "gpt-5.2-pro",
+          messages: [
+            { role: "system", content: finalSystemMessage },
+            { role: "user", content: prompt }
+          ],
+          response_format: { type: "json_object" }, // Enforce JSON mode
+          temperature: 0.7
+        });
 
         return response.data.choices[0].message.content;
       } catch (error) {
@@ -51,6 +39,9 @@ const frontendApiService = {
           await delay(waitTime);
         } else {
           console.error("OpenAI API Error:", error);
+          if (error.message === 'Network Error' && !error.response) {
+            throw new Error("Network Error: La llamada a OpenAI necesita un proxy/servidor para evitar CORS. Configura el backend /api/openai o VITE_API_BASE_URL.");
+          }
           throw new Error(error.response?.data?.error?.message || "Failed to generate completion from OpenAI");
         }
       }
@@ -82,7 +73,6 @@ const frontendApiService = {
         { query, variables },
         {
           headers: {
-            'Authorization': `Bearer ${FIREFLIES_API_KEY}`,
             'Content-Type': 'application/json'
           }
         }
