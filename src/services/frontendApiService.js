@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-const FIREFLIES_API_KEY = import.meta.env.VITE_FIREFLIES_API_KEY || '';
+// API Keys
+const OPENAI_API_KEY = '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';
+const FIREFLIES_API_KEY = 'f42ce5bc-ad1a-4d10-973f-3df2c75327e6';
 
-const OPENAI_API_URL = '/api/openai/v1/chat/completions';
+const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const FIREFLIES_API_URL = 'https://api.fireflies.ai/graphql';
 
 // Helper for delay
@@ -20,15 +22,25 @@ const frontendApiService = {
 
     while (attempt < retries) {
       try {
-        const response = await axios.post(OPENAI_API_URL, {
-          model: "gpt-5.2-pro",
-          messages: [
-            { role: "system", content: finalSystemMessage },
-            { role: "user", content: prompt }
-          ],
-          response_format: { type: "json_object" }, // Enforce JSON mode
-          temperature: 0.7
-        });
+        const response = await axios.post(
+          OPENAI_API_URL,
+          {
+            model: "gpt-5.2-pro",
+            messages: [
+              { role: "system", content: finalSystemMessage },
+              { role: "user", content: prompt }
+            ],
+            response_format: { type: "json_object" }, // Enforce JSON mode
+            temperature: 0.7
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${OPENAI_API_KEY}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+      
 
         return response.data.choices[0].message.content;
       } catch (error) {
@@ -40,9 +52,6 @@ const frontendApiService = {
           await delay(waitTime);
         } else {
           console.error("OpenAI API Error:", error);
-          if (error.message === 'Network Error' && !error.response) {
-            throw new Error("Network Error: La llamada a OpenAI necesita un proxy/servidor para evitar CORS. Configura el proxy /api/openai en tu entorno.");
-          }
           throw new Error(error.response?.data?.error?.message || "Failed to generate completion from OpenAI");
         }
       }
@@ -68,44 +77,7 @@ const frontendApiService = {
 
   // Fireflies GraphQL Call
   fetchFirefliesData: async (query, variables = {}) => {
-    try {
-      const response = await axios.post(
-        FIREFLIES_API_URL,
-        { query, variables },
-        {
-          headers: {
-            'Authorization': `Bearer ${FIREFLIES_API_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      if (response.data.errors) {
-        throw new Error(response.data.errors[0].message);
-      }
-
-      return response.data.data;
-    } catch (error) {
-        console.error("Fireflies API Error:", error);
-        // CORS errors are common in frontend-only calls to some APIs.
-        if (error.message === 'Network Error' && !error.response) {
-            throw new Error("Network Error: This may be due to CORS restrictions on the Fireflies API when called directly from the browser. In a production environment, a proxy server is required.");
-        }
-        throw new Error(error.response?.data?.message || error.message || "Failed to fetch data from Fireflies");
-    }
-  },
-
-  // Specific Fireflies Queries
-  getTranscripts: async (limit = 50, skip = 0) => {
-    const query = `
-      query Transcripts($limit: Int, $skip: Int) {
-        transcripts(limit: $limit, skip: $skip) {
-          id
-          title
-          date
-          duration
-          organizer_email
-        }
+@@ -117,26 +109,26 @@ const frontendApiService = {
       }
     `;
     return frontendApiService.fetchFirefliesData(query, { limit, skip });
