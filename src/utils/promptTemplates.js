@@ -45,6 +45,10 @@ Estructura requerida:
   ],
 
   "visual_report_data": {
+    "report_title": "Título principal del reporte basado en el análisis",
+    "report_subtitle": "Subtítulo o enfoque específico del reporte",
+    "report_intro": "Breve introducción contextual generada a partir del análisis",
+    "key_findings_title": "Título de sección para hallazgos clave",
     "key_findings": [
       {
         "title": "Hallazgo Principal (Titular Impactante)",
@@ -74,13 +78,19 @@ Estructura requerida:
     ],
     "reality_check": {
       "title": "Realidad del Negocio: Titular",
+      "section_label": "Subtítulo para introducir la sección de realidad",
       "description": "Párrafo explicativo detallado sobre la situación actual, retos y contexto operativo detectado en la transcripción/documentos.",
+      "callout_label": "Etiqueta breve para el llamado de atención en la sección",
       "metrics": [
         {"label": "Adopción", "value": "70%", "subtext": "De las empresas lo usan"},
         {"label": "Crecimiento", "value": "24%", "subtext": "Incremento anual"},
         {"label": "Eficiencia", "value": "67%", "subtext": "Mejora en procesos"},
         {"label": "Riesgo", "value": "34%", "subtext": "Exposición actual"}
       ]
+    },
+    "horizons_intro": {
+      "title": "Título de la sección de horizontes",
+      "description": "Texto introductorio que contextualiza los horizontes."
     },
     "horizons": [
       {
@@ -101,7 +111,11 @@ Estructura requerida:
         "description": "Visión futurista, apuestas a largo plazo con alto riesgo pero alto retorno.",
         "probability": "15-25%"
       }
-    ]
+    ],
+    "why_it_matters": {
+      "title": "Título corto para el cierre de relevancia",
+      "description": "Frase o párrafo breve que explique por qué esto importa."
+    }
   }
 }
 
@@ -109,6 +123,7 @@ INSTRUCCIONES DE GENERACIÓN:
 1. Extrae porcentajes y métricas específicas del texto si existen. Si no, estímalo basado en el contexto o usa "N/A".
 2. Para "visual_report_data.reality_check.metrics", genera 4 métricas clave visualizables (porcentajes) que resuman el estado actual.
 3. Para "horizons", clasifica las iniciativas en Corto (H1), Mediano (H2) y Largo Plazo (H3).
+4. Genera todos los títulos y textos del reporte basándote en el análisis; evita copiar textos de ejemplos o referencias visuales previas.
 
 {{CONTENT}}
 `;

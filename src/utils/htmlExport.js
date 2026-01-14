@@ -121,9 +121,23 @@ export const generateAnalysisHTML = (data, sourceTitle) => {
   const findings = visualData.key_findings || [];
   const reality = visualData.reality_check || {};
   const horizons = visualData.horizons || [];
+  const horizonsIntro = visualData.horizons_intro || {};
+  const whyItMatters = visualData.why_it_matters || {};
   
   // Fallbacks if visual data is missing (e.g. old prompt result)
   const standardInsights = data.consulting_insights || [];
+  const reportTitle = visualData.report_title || data.meeting_topics?.[0] || standardInsights[0] || '';
+  const reportSubtitle = visualData.report_subtitle || standardInsights[1] || '';
+  const reportIntro = visualData.report_intro || data.observations?.[0] || '';
+  const keyFindingsTitle = visualData.key_findings_title || standardInsights[0] || '';
+  const realityTitle = reality.title || data.meeting_topics?.[0] || standardInsights[0] || '';
+  const realityDescription = reality.description || data.observations?.[0] || '';
+  const realitySectionLabel = reality.section_label || data.observations?.[1] || '';
+  const realityCalloutLabel = reality.callout_label || data.recommendations?.[0]?.title || '';
+  const horizonsIntroTitle = horizonsIntro.title || standardInsights[0] || '';
+  const horizonsIntroDescription = horizonsIntro.description || data.observations?.[0] || '';
+  const whyItMattersTitle = whyItMatters.title || data.recommendations?.[0]?.title || '';
+  const whyItMattersDescription = whyItMatters.description || data.recommendations?.[0]?.description || '';
   
   return `
 <!DOCTYPE html>
@@ -143,10 +157,12 @@ export const generateAnalysisHTML = (data, sourceTitle) => {
        
        <div>
          ${getBrainStudioLogoSVG()}
-         <h1 style="${STYLES.coverTitle}">Reporte de<br>Inteligencia Estratégica</h1>
-         <div style="margin-top: ${SPACING.lg}; font-size: 20px; color: ${COLORS.text}; font-weight: 500; max-width: 700px; line-height: 1.5;">
-            Análisis profundo de tendencias, realidades operativas y horizontes de innovación detectados.
-         </div>
+         ${reportTitle ? `<h1 style="${STYLES.coverTitle}">${reportTitle}${reportSubtitle ? `<br><span style="color:${COLORS.primary}; font-weight:500;">${reportSubtitle}</span>` : ''}</h1>` : ''}
+         ${reportIntro ? `
+           <div style="margin-top: ${SPACING.lg}; font-size: 20px; color: ${COLORS.text}; font-weight: 500; max-width: 700px; line-height: 1.5;">
+              ${reportIntro}
+           </div>
+         ` : ''}
        </div>
        
        <div style="${STYLES.coverMeta}">
@@ -165,7 +181,7 @@ export const generateAnalysisHTML = (data, sourceTitle) => {
     <div style="padding: ${SPACING.xl}; background: #fff;">
        <div style="${STYLES.sectionTitleBox}">
           ${ICONS.target}
-          <h2 style="${STYLES.sectionTitle}">Hallazgos Clave - Lo que descubrimos</h2>
+          ${keyFindingsTitle ? `<h2 style="${STYLES.sectionTitle}">${keyFindingsTitle}</h2>` : ''}
        </div>
        
        ${findings.length > 0 ? `
@@ -199,21 +215,23 @@ export const generateAnalysisHTML = (data, sourceTitle) => {
          <!-- Left Content -->
          <div>
             <div style="font-size: 24px; font-weight: 700; color: ${COLORS.dark}; margin-bottom: ${SPACING.sm}; line-height: 1.2;">
-               ${reality.title || "Realidad del Negocio"}
+               ${realityTitle}
             </div>
             <div style="width: 60px; height: 4px; background: ${COLORS.primary}; margin-bottom: ${SPACING.lg};"></div>
             
-            <h3 style="font-size: 18px; font-weight: 600; color: ${COLORS.dark}; margin-bottom: ${SPACING.sm};">La realidad</h3>
+            ${realitySectionLabel ? `<h3 style="font-size: 18px; font-weight: 600; color: ${COLORS.dark}; margin-bottom: ${SPACING.sm};">${realitySectionLabel}</h3>` : ''}
             <p style="font-size: 15px; color: ${COLORS.text}; line-height: 1.8; margin-bottom: ${SPACING.lg};">
-               ${reality.description || "Análisis de la situación actual basado en la transcripción."}
+               ${realityDescription}
             </p>
             
-            <div style="display: flex; align-items: center; gap: 12px; margin-top: ${SPACING.xl};">
-               <span style="font-size: 16px; font-weight: 500; color: ${COLORS.dark};">Lo que estamos viendo</span>
-               <div style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid ${COLORS.dark}; display: flex; align-items: center; justify-content: center;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-               </div>
-            </div>
+            ${realityCalloutLabel ? `
+              <div style="display: flex; align-items: center; gap: 12px; margin-top: ${SPACING.xl};">
+                 <span style="font-size: 16px; font-weight: 500; color: ${COLORS.dark};">${realityCalloutLabel}</span>
+                 <div style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid ${COLORS.dark}; display: flex; align-items: center; justify-content: center;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                 </div>
+              </div>
+            ` : ''}
          </div>
 
          <!-- Right Metrics -->
@@ -254,11 +272,12 @@ export const generateAnalysisHTML = (data, sourceTitle) => {
           
           <!-- Left Purple Card -->
           <div style="${STYLES.card} ${STYLES.cardPurple} display: flex; flex-direction: column; justify-content: center;">
-             <h2 style="font-size: 32px; font-weight: 700; margin-bottom: ${SPACING.md}; line-height: 1.1;">Anticipando<br>lo Inevitable</h2>
-             <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; margin-bottom: ${SPACING.lg};">
-                Esta sección no es ciencia ficción. Es análisis de señales que ya están aquí.
-                Organizamos estas tendencias en tres horizontes según su probabilidad de materializarse.
-             </p>
+             ${horizonsIntroTitle ? `<h2 style="font-size: 32px; font-weight: 700; margin-bottom: ${SPACING.md}; line-height: 1.1;">${horizonsIntroTitle}</h2>` : ''}
+             ${horizonsIntroDescription ? `
+               <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; margin-bottom: ${SPACING.lg};">
+                  ${horizonsIntroDescription}
+               </p>
+             ` : ''}
              <div style="height: 1px; background: rgba(255,255,255,0.3); width: 100%;"></div>
           </div>
 
@@ -273,28 +292,30 @@ export const generateAnalysisHTML = (data, sourceTitle) => {
                    <div style="font-size: 14px; font-weight: 500; color: ${COLORS.textLight}; margin-bottom: 4px;">${h.title}</div>
                    <p style="font-size: 13px; color: ${COLORS.text}; margin: 0;">${h.description}</p>
                 </div>
-             `).join('') : `
+             `).join('') : (standardInsights.length > 0 ? `
                 <div style="${STYLES.card}">
-                   <p>No se generaron datos de horizontes específicos en este análisis.</p>
+                   ${formatList(standardInsights)}
                 </div>
-             `}
+             ` : '')}
           </div>
 
        </div>
        
        <!-- Why it matters footer -->
        <div style="margin-top: ${SPACING.lg}; padding: ${SPACING.md}; background: ${GRADIENTS.limeSoft}; border-radius: 12px; border: 1px solid ${COLORS.secondaryLight}; display: flex; align-items: center; gap: ${SPACING.md};">
-          <div style="font-size: 18px; font-weight: 700; color: ${COLORS.dark}; white-space: nowrap;">¿Por qué importa?</div>
-          <div style="font-size: 13px; color: ${COLORS.text}; line-height: 1.5;">
-             Los líderes que anticipan estos cambios pueden experimentar temprano, aprender de errores en privado, y estar listos cuando estas tendencias se vuelvan obligatorias.
-          </div>
+          ${whyItMattersTitle ? `<div style="font-size: 18px; font-weight: 700; color: ${COLORS.dark}; white-space: nowrap;">${whyItMattersTitle}</div>` : ''}
+          ${whyItMattersDescription ? `
+            <div style="font-size: 13px; color: ${COLORS.text}; line-height: 1.5;">
+               ${whyItMattersDescription}
+            </div>
+          ` : ''}
        </div>
     </div>
 
     <!-- Footer -->
     <footer style="${STYLES.footer}">
-       <span>BrainStudio 2026 Strategy Report</span>
-       <span>Pagina 3</span>
+       <span>${reportTitle || ''}</span>
+       <span>${reportSubtitle || data.observations?.[0] || ''}</span>
     </footer>
   </div>
 </body>
