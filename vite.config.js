@@ -246,6 +246,43 @@ export default defineConfig({
 			'Cross-Origin-Embedder-Policy': 'credentialless',
 		},
 		allowedHosts: true,
+		proxy: {
+			'/api/openai': {
+				target: 'https://api.openai.com',
+				changeOrigin: true,
+				secure: true,
+				rewrite: (path) => path.replace(/^\/api\/openai/, ''),
+				configure: (proxy) => {
+					proxy.on('proxyReq', (proxyReq) => {
+						const apiKey = process.env.OPENAI_API_KEY;
+						if (apiKey) {
+							proxyReq.setHeader('Authorization', `Bearer ${apiKey}`);
+						}
+					});
+				},
+			},
+		},
+	},
+	preview: {
+		headers: {
+			'Cross-Origin-Embedder-Policy': 'credentialless',
+		},
+		proxy: {
+			'/api/openai': {
+				target: 'https://api.openai.com',
+				changeOrigin: true,
+				secure: true,
+				rewrite: (path) => path.replace(/^\/api\/openai/, ''),
+				configure: (proxy) => {
+					proxy.on('proxyReq', (proxyReq) => {
+						const apiKey = process.env.OPENAI_API_KEY;
+						if (apiKey) {
+							proxyReq.setHeader('Authorization', `Bearer ${apiKey}`);
+						}
+					});
+				},
+			},
+		},
 	},
 	resolve: {
 		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json', ],
