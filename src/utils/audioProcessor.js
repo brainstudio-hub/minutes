@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://minutes-production.up.railway.app';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://delightful-nourishment-production.up.railway.app';
 const WHISPER_API_URL = `${API_BASE_URL}/api/openai/v1/audio/transcriptions`;
 
 export const processAudio = async (file) => {

@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-const FIREFLIES_API_KEY = import.meta.env.VITE_FIREFLIES_API_KEY || '';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://minutes-production.up.railway.app';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://delightful-nourishment-production.up.railway.app';
 const OPENAI_API_URL = `${API_BASE_URL}/api/openai/v1/chat/completions`;
-const FIREFLIES_API_URL = 'https://api.fireflies.ai/graphql';
+const FIREFLIES_API_URL = `${API_BASE_URL}/api/fireflies/graphql`;
 
 // Helper for delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -75,7 +73,6 @@ const frontendApiService = {
         { query, variables },
         {
           headers: {
-            'Authorization': `Bearer ${FIREFLIES_API_KEY}`,
             'Content-Type': 'application/json'
           }
         }

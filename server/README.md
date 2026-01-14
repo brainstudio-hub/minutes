@@ -5,12 +5,14 @@ Este servicio funciona como proxy para las llamadas a OpenAI y evita CORS en el 
 ## Variables de entorno (Railway)
 
 - `OPENAI_API_KEY` (obligatoria): clave de OpenAI.
+- `FIREFLIES_API_KEY` (opcional): clave de Fireflies para las integraciones.
 - `PORT` (opcional): Railway lo asigna automáticamente.
 
 ## Endpoints
 
 - `POST /api/openai/v1/chat/completions`
 - `POST /api/openai/v1/audio/transcriptions`
+- `POST /api/fireflies/graphql`
 - `GET /health`
 
 ## Configuración del frontend
